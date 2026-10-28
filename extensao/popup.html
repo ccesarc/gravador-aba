@@ -9,6 +9,7 @@
     <header>
       <span class="bola" aria-hidden="true"></span>
       <strong>Gravador de Aba</strong>
+      <button id="ajuda" class="icone" title="Como usar" aria-label="Como usar">ⓘ</button>
     </header>
 
     <!-- Parado: escolher o que gravar -->
@@ -16,12 +17,34 @@
       <p class="aba" id="aba">—</p>
       <fieldset>
         <legend>Gravar</legend>
-        <label><input type="radio" name="modo" value="audio" checked /> Só o som</label>
-        <label><input type="radio" name="modo" value="video" /> Som e vídeo da aba</label>
+        <label title="Só o áudio da aba. Você continua ouvindo normalmente."><input type="radio" name="modo" value="audio" /> Só o som</label>
+        <label title="A aba como aparece na tela, com o som dela."><input type="radio" name="modo" value="video" /> Som e vídeo da aba</label>
+        <label title="O Chrome pergunta o que gravar: a tela toda ou um programa."><input type="radio" name="modo" value="tela" /> Tela inteira ou outra janela</label>
       </fieldset>
-      <label class="check"
+      <div class="linha">
+        <label class="campo" title="Leve: arquivo pequeno. Alta: mais nítido e fluido, arquivo maior."
+          >Qualidade
+          <select id="qualidade">
+            <option value="leve">Leve</option>
+            <option value="normal">Normal</option>
+            <option value="alta">Alta</option>
+          </select>
+        </label>
+        <label class="campo" id="campoFormato" title="WebM: menor. MP3: abre em qualquer celular ou programa."
+          >Formato
+          <select id="formato">
+            <option value="webm">WebM (menor)</option>
+            <option value="mp3">MP3 (abre em tudo)</option>
+          </select>
+        </label>
+      </div>
+      <label class="check" title="Sua voz entra junto. Use fone para o som não voltar pelo microfone."
         ><input type="checkbox" id="microfone" /> Incluir meu microfone (reunião)</label
       >
+      <p class="nota" id="notaTela" hidden>
+        O Chrome vai perguntar o que gravar. Som do computador só no Windows; no Linux/Mac grava a
+        imagem e o seu microfone.
+      </p>
       <button id="gravar" class="primario">● Gravar esta aba</button>
     </section>
 
@@ -29,12 +52,22 @@
     <section id="gravando" hidden>
       <p class="aba" id="abaGravando">—</p>
       <p class="tempo" id="tempo" aria-live="off">00:00</p>
-      <button id="parar" class="primario">■ Parar e salvar</button>
-      <p class="nota">O arquivo vai para Downloads/Gravacoes.</p>
+      <p class="estado" id="estado">Gravando</p>
+      <div class="linha">
+        <button id="pausar" class="secundario" title="Pausa sem perder nada; Continuar segue no mesmo arquivo.">❚❚ Pausar</button>
+        <button id="parar" class="primario">■ Parar e salvar</button>
+      </div>
     </section>
 
+    <div class="linha">
+      <button id="desenhar" class="secundario" title="Caneta por cima da página. Gravando com vídeo, o desenho entra na gravação. Esc fecha.">✎ Desenhar</button>
+      <button id="lista" class="secundario" title="Ouvir, renomear, baixar de novo e apagar as gravações.">☰ Gravações</button>
+    </div>
+
     <p id="erro" class="nota erro" role="alert" hidden></p>
+    <p class="nota" id="atalhos"></p>
     <p class="nota">Tudo fica no seu computador. Grave conversas só com a outra pessoa sabendo.</p>
+    <script src="comum.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

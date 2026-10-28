@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Gravador de Aba",
-  "version": "0.1.0",
-  "description": "Grava o som (ou som e vídeo) da aba aberta, com o seu microfone se quiser. Tudo fica no seu computador.",
+  "version": "0.2.0",
+  "description": "Grava o som (ou som e vídeo) da aba aberta, ou a tela inteira, com o seu microfone se quiser, e deixa desenhar na tela. Tudo fica no seu computador.",
   "minimum_chrome_version": "116",
   "action": {
     "default_popup": "popup.html",
@@ -11,7 +11,21 @@
   },
   "icons": { "16": "icones/16.png", "32": "icones/32.png", "48": "icones/48.png", "128": "icones/128.png" },
   "background": { "service_worker": "fundo.js" },
-  "permissions": ["tabCapture", "offscreen", "downloads", "storage"],
+  "permissions": ["tabCapture", "offscreen", "downloads", "storage", "unlimitedStorage", "activeTab", "scripting", "desktopCapture"],
+  "commands": {
+    "gravar-parar": {
+      "suggested_key": { "default": "Alt+Shift+G" },
+      "description": "Gravar a aba / parar e salvar"
+    },
+    "pausar": {
+      "suggested_key": { "default": "Alt+Shift+S" },
+      "description": "Pausar / continuar a gravação"
+    },
+    "desenhar": {
+      "suggested_key": { "default": "Alt+Shift+D" },
+      "description": "Desenhar na tela (liga/desliga)"
+    }
+  },
   "content_security_policy": {
     "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self'; media-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'"
   }

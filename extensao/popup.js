@@ -1,5 +1,6 @@
-// Popup: escolhe o que gravar e mostra o tempo. O id da captura (tabCapture) precisa sair daqui,
-// do clique da pessoa; quem grava é o offscreen (o popup fecha e a gravação continua).
+// Popup: escolhe o que gravar, mostra o tempo e pausa/para. O id da captura (tabCapture) precisa
+// sair daqui, do clique da pessoa; quem grava é o offscreen (o popup fecha e a gravação continua).
+// As escolhas ficam guardadas e valem também para o atalho de teclado.
 'use strict'
 
 const $ = (id) => document.getElementById(id)
@@ -15,46 +16,86 @@ async function abaAtual() {
   return aba
 }
 
-function mmss(ms) {
-  const s = Math.floor(ms / 1000)
-  const h = Math.floor(s / 3600)
-  const p = (n) => String(n).padStart(2, '0')
-  return (h ? `${h}:` : '') + `${p(Math.floor((s % 3600) / 60))}:${p(s % 60)}`
+function modoEscolhido() {
+  return document.querySelector('input[name=modo]:checked')?.value || 'audio'
+}
+
+// Formato só vale para "só o som"; a qualidade mostra o que muda em cada modo.
+function ajustarOpcoes() {
+  const modo = modoEscolhido()
+  const video = modo !== 'audio'
+  $('campoFormato').hidden = video
+  $('notaTela').hidden = modo !== 'tela'
+  $('gravar').textContent = modo === 'tela' ? '● Escolher e gravar' : '● Gravar esta aba'
+  for (const op of $('qualidade').options) {
+    const q = QUALIDADES[op.value]
+    op.textContent = `${q.nome} · ${video ? q.resumo : `${q.audioKbps} kbps`}`
+  }
+}
+
+async function carregarConfig() {
+  const c = await lerConfig()
+  document.querySelector(`input[name=modo][value=${c.modo}]`).checked = true
+  $('qualidade').value = c.qualidade
+  $('formato').value = c.formato
+  $('microfone').checked = c.microfone
+  ajustarOpcoes()
+}
+
+function guardarConfig() {
+  ajustarOpcoes()
+  salvarConfig({
+    modo: modoEscolhido(),
+    qualidade: $('qualidade').value,
+    formato: $('formato').value,
+    microfone: $('microfone').checked,
+  })
 }
 
 async function atualizar() {
-  const st = await chrome.storage.session.get(['gravando', 'inicio', 'titulo', 'ultimoErro'])
+  const st = await chrome.storage.session.get(['gravando', 'inicio', 'pausadoEm', 'pausadoTotal', 'titulo', 'ultimoErro'])
   $('parado').hidden = !!st.gravando
   $('gravando').hidden = !st.gravando
   clearInterval(relogio)
   if (st.gravando) {
     $('abaGravando').textContent = st.titulo || ''
-    const tic = () => ($('tempo').textContent = mmss(Date.now() - st.inicio))
+    $('estado').textContent = st.pausadoEm ? 'Pausado' : 'Gravando'
+    $('estado').classList.toggle('pausado', !!st.pausadoEm)
+    $('pausar').textContent = st.pausadoEm ? '▶ Continuar' : '❚❚ Pausar'
+    const tic = () => ($('tempo').textContent = mmss(decorrido(st)))
     tic()
-    relogio = setInterval(tic, 500)
+    if (!st.pausadoEm) relogio = setInterval(tic, 500)
   } else {
     const aba = await abaAtual()
     $('aba').textContent = aba?.title || ''
-    if (st.ultimoErro) {
-      mostrarErro(st.ultimoErro)
-      chrome.storage.session.remove('ultimoErro')
-    }
+  }
+  if (st.ultimoErro) {
+    mostrarErro(st.ultimoErro)
+    chrome.storage.session.remove('ultimoErro')
+    if (!st.gravando) chrome.action.setBadgeText({ text: '' })
   }
 }
 
-async function microfoneLiberado() {
-  try {
-    const p = await navigator.permissions.query({ name: 'microphone' })
-    return p.state === 'granted'
-  } catch {
-    return false
-  }
+async function mostrarAtalhos() {
+  const nomes = { 'gravar-parar': 'gravar/parar', pausar: 'pausar', desenhar: 'desenhar' }
+  const lista = (await chrome.commands.getAll()).filter((c) => nomes[c.name] && c.shortcut)
+  const el = $('atalhos')
+  el.textContent = lista.length ? `Atalhos: ${lista.map((c) => `${c.shortcut} ${nomes[c.name]}`).join(' · ')} · ` : ''
+  const mudar = document.createElement('a')
+  mudar.href = '#'
+  mudar.textContent = lista.length ? 'mudar' : 'Configurar atalhos de teclado'
+  mudar.addEventListener('click', (e) => {
+    e.preventDefault()
+    chrome.tabs.create({ url: 'chrome://extensions/shortcuts' })
+  })
+  el.append(mudar)
 }
 
 $('gravar').addEventListener('click', async () => {
   mostrarErro('')
   const aba = await abaAtual()
-  if (!aba?.id || /^(chrome|edge|about|chrome-extension):/.test(aba.url || '')) {
+  const modo = modoEscolhido()
+  if (modo !== 'tela' && !podeGravar(aba)) {
     mostrarErro('Esta aba não pode ser gravada (páginas internas do Chrome). Abra o site e tente de novo.')
     return
   }
@@ -64,19 +105,41 @@ $('gravar').addEventListener('click', async () => {
     chrome.tabs.create({ url: 'microfone.html' })
     return
   }
+  if (modo === 'tela') {
+    // A janela de escolha do Chrome fecha o popup; o fundo.js segue sozinho.
+    await chrome.runtime.sendMessage({
+      alvo: 'fundo',
+      tipo: 'gravarTela',
+      dados: { microfone, qualidade: $('qualidade').value },
+    })
+    window.close()
+    return
+  }
   try {
     const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: aba.id })
-    const video = document.querySelector('input[name=modo]:checked').value === 'video'
     const r = await chrome.runtime.sendMessage({
       alvo: 'fundo',
       tipo: 'iniciar',
-      dados: { streamId, video, microfone, tabId: aba.id, titulo: aba.title },
+      dados: {
+        streamId,
+        video: modo === 'video',
+        microfone,
+        qualidade: $('qualidade').value,
+        formato: $('formato').value,
+        tabId: aba.id,
+        titulo: aba.title,
+      },
     })
     if (!r?.ok) throw new Error(r?.erro)
     atualizar()
   } catch (e) {
     mostrarErro(String(e?.message || e || 'Não consegui gravar.'))
   }
+})
+
+$('pausar').addEventListener('click', async () => {
+  const { pausadoEm } = await chrome.storage.session.get('pausadoEm')
+  await chrome.runtime.sendMessage({ alvo: 'fundo', tipo: pausadoEm ? 'continuar' : 'pausar' })
 })
 
 $('parar').addEventListener('click', async () => {
@@ -88,5 +151,23 @@ $('parar').addEventListener('click', async () => {
   }, 800)
 })
 
+$('desenhar').addEventListener('click', async () => {
+  mostrarErro('')
+  const aba = await abaAtual()
+  try {
+    if (!podeGravar(aba)) throw new Error('Não dá para desenhar nesta página (páginas internas do Chrome).')
+    await alternarDesenho(aba.id)
+    window.close()
+  } catch (e) {
+    mostrarErro(String(e?.message || e))
+  }
+})
+
+$('lista').addEventListener('click', () => chrome.tabs.create({ url: 'gravacoes.html' }))
+$('ajuda').addEventListener('click', () => chrome.tabs.create({ url: 'ajuda.html' }))
+
+for (const el of document.querySelectorAll('#parado input, #parado select')) el.addEventListener('change', guardarConfig)
 chrome.storage.session.onChanged.addListener(atualizar)
+carregarConfig()
+mostrarAtalhos()
 atualizar()

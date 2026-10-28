@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Como usar · Gravador de Aba</title>
+    <link rel="stylesheet" href="estilo.css" />
+  </head>
+  <body class="pagina">
+    <main class="largo ajuda">
+      <h1>Como usar o Gravador de Aba</h1>
+      <p>
+        Grava o som ou o vídeo de uma aba, da tela inteira ou de outra janela, com a sua voz se quiser.
+        <strong>Tudo fica no seu computador</strong>: não tem servidor, não tem conta e nada é enviado
+        para a internet.
+      </p>
+
+      <h2>1. Gravar</h2>
+      <ol>
+        <li>Abra o que quer gravar (vídeo, aula, Meet, WhatsApp Web, música…).</li>
+        <li>Clique no ícone do Gravador (se não aparecer: quebra-cabeça 🧩 → alfinete 📌).</li>
+        <li>Escolha o que gravar e clique em <strong>● Gravar</strong>.</li>
+        <li>Pode fechar o popup: a gravação continua e o ícone mostra o tempo.</li>
+        <li>Para terminar: ícone → <strong>■ Parar e salvar</strong>.</li>
+      </ol>
+      <table>
+        <tr><th>Opção</th><th>O que grava</th></tr>
+        <tr><td>Só o som</td><td>Só o áudio da aba. Você continua ouvindo normalmente.</td></tr>
+        <tr><td>Som e vídeo da aba</td><td>A aba como aparece na tela, com o som dela.</td></tr>
+        <tr>
+          <td>Tela inteira ou outra janela</td>
+          <td>
+            O Chrome pergunta o que gravar (a tela toda ou um programa). O som do computador só é
+            gravado no Windows; no Linux e no Mac fica a imagem e o seu microfone. Para parar também
+            vale o botão <em>Parar de compartilhar</em> do Chrome.
+          </td>
+        </tr>
+      </table>
+
+      <h2>2. Qualidade e formato</h2>
+      <table>
+        <tr><th>Qualidade</th><th>Vídeo</th><th>Som</th><th>Tamanho aproximado</th></tr>
+        <tr><td>Leve</td><td>720p, 24 qps</td><td>64 kbps</td><td>~9 MB por minuto de vídeo · ~0,5 MB por minuto de som</td></tr>
+        <tr><td>Normal</td><td>1080p, 30 qps</td><td>128 kbps</td><td>~19 MB/min de vídeo · ~1 MB/min de som</td></tr>
+        <tr><td>Alta</td><td>1080p, 60 qps</td><td>192 kbps</td><td>~45 MB/min de vídeo · ~1,4 MB/min de som</td></tr>
+      </table>
+      <p>
+        <strong>Formato</strong> (só para "Só o som"): <strong>WebM</strong> é menor e abre no Chrome,
+        VLC e WhatsApp; <strong>MP3</strong> abre em qualquer celular, carro ou programa. Vídeo sai
+        sempre em WebM (para MP4: <code>ffmpeg -i video.webm video.mp4</code>).
+      </p>
+
+      <h2>3. Microfone</h2>
+      <p>
+        Marque <strong>Incluir meu microfone</strong> para a sua voz entrar junto (reunião, narração).
+        Na primeira vez abre uma página para você permitir o microfone; depois é só gravar de novo.
+        Use fone de ouvido para o som da reunião não voltar pelo microfone.
+      </p>
+
+      <h2>4. Pausar</h2>
+      <p>
+        <strong>❚❚ Pausar</strong> para a gravação sem perder nada; <strong>▶ Continuar</strong>
+        segue no mesmo arquivo. Pausado, o ícone mostra <strong>II</strong> em amarelo.
+      </p>
+
+      <h2>5. Desenhar na tela</h2>
+      <p>
+        <strong>✎ Desenhar</strong> coloca uma caneta por cima da página. Gravando com vídeo, o
+        desenho entra na gravação; serve também para apresentar ao vivo. Funciona em sites, não na
+        área de trabalho nem em páginas internas do Chrome.
+      </p>
+      <table>
+        <tr><th>Tecla</th><th>Ferramenta</th></tr>
+        <tr><td>C</td><td>✎ Caneta</td></tr>
+        <tr><td>M</td><td>▍ Marca-texto (transparente)</td></tr>
+        <tr><td>S</td><td>➚ Seta</td></tr>
+        <tr><td>R</td><td>▢ Retângulo</td></tr>
+        <tr><td>U</td><td>☝ Mexer na página (clicar, rolar) sem apagar o desenho</td></tr>
+        <tr><td>Ctrl+Z</td><td>↶ Desfazer</td></tr>
+        <tr><td>Delete</td><td>🗑 Apagar tudo</td></tr>
+        <tr><td>Esc</td><td>✕ Fechar a caneta</td></tr>
+      </table>
+      <p>A barra pode ser arrastada pela alça <strong>⠿</strong>.</p>
+
+      <h2>6. Minhas gravações</h2>
+      <p>
+        <strong>☰ Gravações</strong> mostra tudo o que você gravou: ouvir/assistir, renomear (clique no
+        nome), baixar de novo e apagar. Cada gravação também vai para
+        <code>Downloads/Gravacoes</code>; dá para desligar isso na própria lista. Apagar da lista não
+        apaga o arquivo que já está em Downloads.
+      </p>
+
+      <h2>7. Atalhos de teclado</h2>
+      <table>
+        <tr><th>Atalho</th><th>Faz</th></tr>
+        <tr><td>Alt+Shift+G</td><td>Gravar / parar e salvar (com as últimas escolhas do popup)</td></tr>
+        <tr><td>Alt+Shift+S</td><td>Pausar / continuar</td></tr>
+        <tr><td>Alt+Shift+D</td><td>Liga / desliga a caneta</td></tr>
+      </table>
+      <p>Para trocar: <code>chrome://extensions/shortcuts</code> (link "mudar" no popup).</p>
+
+      <h2>8. O que grava e o que não grava</h2>
+      <table>
+        <tr><th>Situação</th><th>Grava?</th></tr>
+        <tr><td>Som de qualquer aba (vídeo, aula, podcast, música)</td><td>Sim</td></tr>
+        <tr><td>Reunião no navegador (Meet, Teams, Zoom web)</td><td>Sim; sua voz só com o microfone marcado</td></tr>
+        <tr><td>Mensagem de voz no WhatsApp Web</td><td>Sim, enquanto toca</td></tr>
+        <tr><td>Ligação do WhatsApp</td><td>Só com "Tela inteira" no Windows (o app fica fora do navegador)</td></tr>
+        <tr><td>Netflix, Prime e outros com proteção</td><td>A imagem sai preta; o som costuma gravar</td></tr>
+        <tr><td>Páginas internas (<code>chrome://…</code>, loja de extensões)</td><td>Só com "Tela inteira"</td></tr>
+      </table>
+
+      <h2>9. Privacidade e cuidado legal</h2>
+      <ul>
+        <li>Nada sai do computador. A extensão não lê o conteúdo dos sites.</li>
+        <li>O Chrome mostra um aviso enquanto a aba ou a tela está sendo gravada.</li>
+        <li>
+          Gravar uma conversa da qual você participa costuma ser aceito no Brasil, mas
+          <strong>divulgar sem autorização</strong> pode violar a privacidade e a LGPD. Avise que
+          está gravando.
+        </li>
+        <li>Música e vídeo de terceiros: só para uso pessoal.</li>
+        <li>As gravações da lista ficam no seu perfil do Chrome, sem senha: quem usa o mesmo usuário do computador consegue abrir.</li>
+      </ul>
+
+      <h2>10. Deu problema?</h2>
+      <ul>
+        <li>A mensagem de erro aparece no popup. Se o ícone mostra <strong>!</strong>, abra o popup para ler.</li>
+        <li>Microfone bloqueado: cadeado ao lado do endereço → liberar microfone.</li>
+        <li>Ícone preso no tempo/REC: <code>chrome://extensions</code> → ↻ do Gravador.</li>
+        <li>
+          Detalhes técnicos: <code>chrome://extensions</code> → <em>Service worker</em> do Gravador; durante a
+          gravação, <em>offscreen.html</em>.
+        </li>
+      </ul>
+      <p class="nota">MP3 feito com o LAME (lame.sourceforge.io), via lamejs, licença LGPL-3.0.</p>
+    </main>
+  </body>
+</html>
