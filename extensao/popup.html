@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gravador de Aba</title>
+    <link rel="stylesheet" href="estilo.css" />
+  </head>
+  <body class="popup">
+    <header>
+      <span class="bola" aria-hidden="true"></span>
+      <strong>Gravador de Aba</strong>
+    </header>
+
+    <!-- Parado: escolher o que gravar -->
+    <section id="parado">
+      <p class="aba" id="aba">—</p>
+      <fieldset>
+        <legend>Gravar</legend>
+        <label><input type="radio" name="modo" value="audio" checked /> Só o som</label>
+        <label><input type="radio" name="modo" value="video" /> Som e vídeo da aba</label>
+      </fieldset>
+      <label class="check"
+        ><input type="checkbox" id="microfone" /> Incluir meu microfone (reunião)</label
+      >
+      <button id="gravar" class="primario">● Gravar esta aba</button>
+    </section>
+
+    <!-- Gravando -->
+    <section id="gravando" hidden>
+      <p class="aba" id="abaGravando">—</p>
+      <p class="tempo" id="tempo" aria-live="off">00:00</p>
+      <button id="parar" class="primario">■ Parar e salvar</button>
+      <p class="nota">O arquivo vai para Downloads/Gravacoes.</p>
+    </section>
+
+    <p id="erro" class="nota erro" role="alert" hidden></p>
+    <p class="nota">Tudo fica no seu computador. Grave conversas só com a outra pessoa sabendo.</p>
+    <script src="popup.js"></script>
+  </body>
+</html>
