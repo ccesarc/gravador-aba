@@ -42,6 +42,15 @@ Precisa de MP3 ou MP4? `ffmpeg -i entrada.webm saida.mp3` ou `ffmpeg -i entrada.
 
 A gravação fica na memória até parar: vídeo longo (1 h ≈ 1,1 GB) pede um computador com folga.
 
+## Deu problema?
+
+- Mensagem de erro aparece no próprio popup (ex.: página interna do Chrome, microfone bloqueado).
+- Microfone bloqueado: abra de novo com **Incluir meu microfone** marcado (abre a página de permissão)
+  ou libere no cadeado ao lado do endereço.
+- Detalhes do erro: `chrome://extensions` → na extensão, **Service worker** (console do `fundo.js`);
+  durante a gravação, **offscreen.html** em "Inspecionar visualizações".
+- Ícone preso em **REC**: clique em ↻ na extensão em `chrome://extensions`.
+
 ## Cuidado legal
 
 - Gravar uma conversa **da qual você participa** costuma ser aceito no Brasil, mas **divulgar** sem
